@@ -1,16 +1,9 @@
-# import scrapy
-
 import math
 
-import matplotlib
-import mplcyberpunk
 import numpy as np
-from gravity import gravity_acceleration_calc
-from matplotlib import pyplot as plt
 
-# Use non interactive backend for matplotlib (increase performace)
-# matplotlib.use("agg")
-plt.style.use("cyberpunk")
+from xrocket.gravity import gravity_acceleration_calc
+
 
 
 class Rocket:
@@ -227,6 +220,7 @@ class Rocket:
         # Use kinematics equation to update velocity
         # Second Law assumes constant "a" but with sufficiently small "dt" we can still use it
         # for a "good enough" approximation akin to Euler methods of slope approximation
+        #TODO
         # Consider upgrading to the Rocket Equation's methodology at some point
         # and/or Runge Kutta Fourth Order [RK4]
         # if self.pos == 0:

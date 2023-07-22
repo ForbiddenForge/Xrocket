@@ -1,0 +1,27 @@
+[project]
+name = "xrocket"
+version = "0.0.1"
+dynamic = ["dependencies"]
+authors = [
+  { name="Forbidden Forge", email="ForbiddenForge64@gmail.com" },
+]
+description = "A light-weight rocket simulator."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ForbiddenForge/Xrocket"
+"Bug Tracker" = "https://github.com/ForbiddenForge/Xrocket/issues"
+
+
+[build-system]
+requires = ["hatchling" , "hatch-requirements-txt"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]

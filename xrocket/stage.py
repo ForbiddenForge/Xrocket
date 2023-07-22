@@ -1,5 +1,5 @@
-from gravity import gravity_acceleration_calc
-from settings import *
+from xrocket.gravity import gravity_acceleration_calc
+from xrocket.settings import *
 
 
 class Stage:
