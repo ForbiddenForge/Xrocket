@@ -8,7 +8,6 @@ import numpy as np
 import plots
 from gravity import gravity_acceleration_calc
 from matplotlib import pyplot as plt
-from pygame import Vector2 as vector
 from settings import *
 from stage import Stage
 
