@@ -56,7 +56,7 @@ def update_rocket_dict(
 
 def csv_output(rocket_parameters):
     # fmt: off
-    with open("plots/Rocket Values.csv", "w") as new_file:
+    with open("../plots/Rocket Values.csv", "w") as new_file:
         writer = csv.writer(new_file)
         key_list = list(rocket_parameters.keys())
 
@@ -85,7 +85,7 @@ def altitude_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Altitude.png", dpi=900)
+    plt.savefig("../plots/Altitude.png", dpi=900)
     
 def position_plot(rocket_parameters):
     fig = plt.figure()
@@ -101,7 +101,7 @@ def position_plot(rocket_parameters):
     plt.ticklabel_format(useOffset=False, style="plain")
     ax.plot3D(x_axis,y_axis, z_axis)
     mplcyberpunk.make_lines_glow()
-    plt.savefig('plots/Position.png', dpi=900)
+    plt.savefig('../plots/Position.png', dpi=900)
     plt.show()
     
     
@@ -122,7 +122,7 @@ def velocity_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Velocity.png", dpi=900)
+    plt.savefig("../plots/Velocity.png", dpi=900)
 
 
 def acceleration_plot(rocket_parameters):
@@ -139,7 +139,7 @@ def acceleration_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Acceleration.png", dpi=900)
+    plt.savefig("../plots/Acceleration.png", dpi=900)
 
 
 def force_plot(rocket_parameters):
@@ -159,7 +159,7 @@ def force_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Forces.png", dpi=900)
+    plt.savefig("../plots/Forces.png", dpi=900)
 
 
 def fuel_plot(rocket_parameters):
@@ -180,7 +180,7 @@ def fuel_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Mass.png", dpi=900)
+    plt.savefig("../plots/Mass.png", dpi=900)
 
 
 def drag_force_plot(rocket_parameters):
@@ -197,7 +197,7 @@ def drag_force_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/DragForce.png", dpi=900)
+    plt.savefig("../plots/DragForce.png", dpi=900)
 
 
 def weight_plot(rocket_parameters):
@@ -214,7 +214,7 @@ def weight_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Weight.png", dpi=900)
+    plt.savefig("../plots/Weight.png", dpi=900)
 
 
 def gravity_plot(rocket_parameters):
@@ -231,4 +231,4 @@ def gravity_plot(rocket_parameters):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    plt.savefig("plots/Gravity.png", dpi=900)
+    plt.savefig("../plots/Gravity.png", dpi=900)

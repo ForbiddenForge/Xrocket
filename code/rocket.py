@@ -5,11 +5,8 @@ import math
 import matplotlib
 import mplcyberpunk
 import numpy as np
-import plots
 from gravity import gravity_acceleration_calc
 from matplotlib import pyplot as plt
-from settings import *
-from stage import Stage
 
 # Use non interactive backend for matplotlib (increase performace)
 # matplotlib.use("agg")
@@ -17,7 +14,7 @@ plt.style.use("cyberpunk")
 
 
 class Rocket:
-    def __init__(self):
+    def __init__(self, core_stage, srb_stage, interim_stage, earth_mass, earth_radius):
 
         self.current_stage = "Core SRB"
         self.reference_area = 0
@@ -25,6 +22,9 @@ class Rocket:
 
         # List of Stage instances
         self.stage_objects = [core_stage, srb_stage, interim_stage]
+        self.core_stage = core_stage
+        self.srb_stage = srb_stage
+        self.interim_stage = interim_stage
 
         # Forces
         self.drag_force = 0
@@ -38,6 +38,9 @@ class Rocket:
         # Values used to calculate drag force
         self.drag_coefficient = 0
         self.mach_speed = 0
+        #TODO refactor later
+        self.earth_mass = earth_mass
+        self.earth_radius = earth_radius
 
     # Masses
     @property
@@ -56,16 +59,16 @@ class Rocket:
     @property
     def weight(self):
         return self.total_mass * gravity_acceleration_calc(
-            big_object_mass=EARTH_MASS,
-            big_object_radius=EARTH_RADIUS,
+            big_object_mass=self.earth_mass,
+            big_object_radius=self.earth_radius,
             small_object_distance=self.pos[1],
         )
 
     @property
     def gravity(self):
         return -gravity_acceleration_calc(
-            big_object_mass=EARTH_MASS,
-            big_object_radius=EARTH_RADIUS,
+            big_object_mass=self.earth_mass,
+            big_object_radius=self.earth_radius,
             small_object_distance=self.pos[1],
         )
 
@@ -78,21 +81,21 @@ class Rocket:
         return self.thrust + self.weight + self.drag_force
 
     def flight_controller(self):
-        if core_stage.prop_mass > 0 and srb_stage.prop_mass > 0:
-            interim_stage.firing = False
+        if self.core_stage.prop_mass > 0 and self.srb_stage.prop_mass > 0:
+            self.interim_stage.firing = False
             self.current_stage = "Core SRB"
-        elif srb_stage.prop_mass <= 0 and core_stage.prop_mass > 0:
-            interim_stage.firing = False
-            srb_stage.firing = False
-            srb_stage.attached = False
+        elif self.srb_stage.prop_mass <= 0 and self.core_stage.prop_mass > 0:
+            self.interim_stage.firing = False
+            self.srb_stage.firing = False
+            self.srb_stage.attached = False
             self.current_stage = "Core"
             self.theta = 150
-        elif core_stage.prop_mass <= 0 and srb_stage.prop_mass <= 0:
-            core_stage.firing = False
-            core_stage.attached = False
-            srb_stage.firing = False
-            srb_stage.attached = False
-            interim_stage.firing = True
+        elif self.core_stage.prop_mass <= 0 and self.srb_stage.prop_mass <= 0:
+            self.core_stage.firing = False
+            self.core_stage.attached = False
+            self.srb_stage.firing = False
+            self.srb_stage.attached = False
+            self.interim_stage.firing = True
             self.current_stage = "Interim"
             self.theta = 30
 
@@ -155,11 +158,11 @@ class Rocket:
 
     def calc_reference_area(self):
         if self.current_stage == "Core SRB":
-            self.reference_area = core_stage.reference_area
+            self.reference_area = self.core_stage.reference_area
         elif self.current_stage == "Core":
-            self.reference_area = core_stage.reference_area - srb_stage.reference_area
+            self.reference_area = self.core_stage.reference_area - self.srb_stage.reference_area
         elif self.current_stage == "Interim":
-            self.reference_area = interim_stage.reference_area
+            self.reference_area = self.interim_stage.reference_area
 
     def calc_drag_force(self, dt):
         # update mach speed based from current rocket velocity
@@ -214,7 +217,7 @@ class Rocket:
                 * self.reference_area
             )
 
-    def calc_acc_vel(self):
+    def calc_acc_vel(self, dt):
         # Calculate acceleration for variable mass system => a = [resultant force] / m
         self.rocket_acceleration = self.resultant_force / self.total_mass
         print(
@@ -279,79 +282,8 @@ class Rocket:
         self.calc_air_density()
         self.calc_reference_area()
         self.calc_drag_force(dt)
-        self.calc_acc_vel()
+        self.calc_acc_vel(dt)
         self.move(dt)
 
 
-# Create stages and rocket object instances using settings file
 
-
-core_stage = Stage(
-    dry_mass=CORE_STAGE["Dry Mass"],
-    prop_mass=CORE_STAGE["Propellant Mass"],
-    mass_flow=CORE_STAGE["Mass Flow"],
-    exhaust_v=CORE_STAGE["Exhaust Velocity"],
-    ref_area=CORE_STAGE["Reference Area"],
-)
-srb_stage = Stage(
-    dry_mass=SOLID_ROCKET_BOOSTERS["Dry Mass"],
-    prop_mass=SOLID_ROCKET_BOOSTERS["Propellant Mass"],
-    mass_flow=SOLID_ROCKET_BOOSTERS["Mass Flow"],
-    exhaust_v=SOLID_ROCKET_BOOSTERS["Exhaust Velocity"],
-    ref_area=SOLID_ROCKET_BOOSTERS["Reference Area"],
-)
-interim_stage = Stage(
-    dry_mass=INTERIM_CRYOGENIC_STAGE["Dry Mass"],
-    prop_mass=INTERIM_CRYOGENIC_STAGE["Propellant Mass"],
-    mass_flow=INTERIM_CRYOGENIC_STAGE["Mass Flow"],
-    exhaust_v=INTERIM_CRYOGENIC_STAGE["Exhaust Velocity"],
-    ref_area=INTERIM_CRYOGENIC_STAGE["Reference Area"],
-)
-exploration_stage = Stage(
-    dry_mass=EXPLORATION_UPPER_STAGE["Dry Mass"],
-    prop_mass=EXPLORATION_UPPER_STAGE["Propellant Mass"],
-    mass_flow=EXPLORATION_UPPER_STAGE["Mass Flow"],
-    exhaust_v=EXPLORATION_UPPER_STAGE["Exhaust Velocity"],
-    ref_area=EXPLORATION_UPPER_STAGE["Reference Area"],
-)
-
-rocket = Rocket()
-
-# Create dictionary and associated keys for use with HUD GUI within pygame
-rocket_parameters = {}
-plots.create_rocket_dict(rocket_parameters)
-
-# set initial time, dt, gravity, and eventually air resistance and more complex gravity
-t = 0
-dt = 0.1  # seconds
-simple_gravity = -9.80665  # m/s**2
-EARTH_MASS = 5.9722e24  # kg
-EARTH_RADIUS = 6.371e6  # m
-
-
-# Loop over rocket.update and its related methods while the rocket still has fuel
-while t < 1000:
-    t += 0.1
-    # fmt: off
-    print(f"Time is {t} seconds")
-    rocket.update(dt)
-    plots.update_rocket_dict(
-        rocket_parameters=rocket_parameters, 
-        t=t, 
-        rocket=rocket, 
-        core_stage=core_stage, 
-        srb_stage=srb_stage, 
-        interim_stage=interim_stage
-        )
-
-
-plots.csv_output(rocket_parameters)
-plots.altitude_plot(rocket_parameters)
-plots.position_plot(rocket_parameters)
-plots.velocity_plot(rocket_parameters)
-plots.acceleration_plot(rocket_parameters)
-plots.force_plot(rocket_parameters)
-plots.fuel_plot(rocket_parameters)
-plots.drag_force_plot(rocket_parameters)
-plots.weight_plot(rocket_parameters)
-plots.gravity_plot(rocket_parameters)
