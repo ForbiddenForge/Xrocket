@@ -1,16 +1,9 @@
-# import scrapy
-
 import math
 
-import matplotlib
-import mplcyberpunk
 import numpy as np
-from gravity import gravity_acceleration_calc
-from matplotlib import pyplot as plt
 
-# Use non interactive backend for matplotlib (increase performace)
-# matplotlib.use("agg")
-plt.style.use("cyberpunk")
+from xrocket.gravity import gravity_acceleration_calc
+
 
 
 class Rocket:

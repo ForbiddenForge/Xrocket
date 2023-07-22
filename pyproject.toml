@@ -1,5 +1,5 @@
 [project]
-name = "Xrocket"
+name = "xrocket"
 version = "0.0.1"
 dynamic = ["dependencies"]
 authors = [

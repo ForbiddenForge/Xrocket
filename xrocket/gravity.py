@@ -1,4 +1,4 @@
-from settings import GRAVITATIONAL_CONSTANT
+from xrocket.settings import GRAVITATIONAL_CONSTANT
 
 
 def gravity_acceleration_calc(
