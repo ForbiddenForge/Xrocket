@@ -1,10 +1,11 @@
+import logging
 import math
 
 import numpy as np
 
 from xrocket.gravity import gravity_acceleration_calc
 
-
+LOG = logging.getLogger(__name__)
 
 class Rocket:
     def __init__(self, core_stage, srb_stage, interim_stage, earth_mass, earth_radius):
@@ -82,7 +83,7 @@ class Rocket:
             self.srb_stage.firing = False
             self.srb_stage.attached = False
             self.current_stage = "Core"
-            self.theta = 150
+            self.theta = 90
         elif self.core_stage.prop_mass <= 0 and self.srb_stage.prop_mass <= 0:
             self.core_stage.firing = False
             self.core_stage.attached = False
@@ -90,22 +91,20 @@ class Rocket:
             self.srb_stage.attached = False
             self.interim_stage.firing = True
             self.current_stage = "Interim"
-            self.theta = 30
+            self.theta = 90
 
     def update_mass(self, dt):
         stage_dry_masses = [stage.dry_mass for stage in self.stage_objects]
         stage_prop_masses = [stage.prop_mass for stage in self.stage_objects]
         stage_total_masses = [stage.total_mass for stage in self.stage_objects]
 
-        print(
+        LOG.debug(
             f"Core Stage Dry Mass: {stage_dry_masses[0]}\nCore Stage Prop Mass: {stage_prop_masses[0]}\nCore Stage Total Mass: {stage_total_masses[0]}\nSRB Stage Dry Mass: {stage_dry_masses[1]}\nSRB Stage Prop Mass: {stage_prop_masses[1]}\nSRB Stage Total Mass: {stage_total_masses[1]}\nInterim Stage Dry Mass: {stage_dry_masses[2]}\nInterim Stage Prop Mass: {stage_prop_masses[2]}\nInterim Stage Total Mass: {stage_total_masses[2]}\n"
         )
 
     def calc_air_density(self):
         # Approximate air density based on the "U.S. Standard Atmosphere 1976" model
         # Reference: https://www.engineeringtoolbox.com/standard-atmosphere-d_604.html
-        print(f"self.pos is {self.pos}")
-        print(f"self.pos[1] is {self.pos[1]}")
         if self.pos[1] <= 0:
             self.air_density = 1.225
         elif 0 < self.pos[1] <= 1000:
@@ -200,7 +199,7 @@ class Rocket:
                 * self.drag_coefficient
                 * self.reference_area
             )
-            print(f"DRAG DRAG DSARG {self.drag_force}")
+            LOG.debug(f"DRAG DRAG DSARG {self.drag_force}")
         else:
             self.drag_force = (
                 0.5
@@ -213,7 +212,7 @@ class Rocket:
     def calc_acc_vel(self, dt):
         # Calculate acceleration for variable mass system => a = [resultant force] / m
         self.rocket_acceleration = self.resultant_force / self.total_mass
-        print(
+        LOG.debug(
             f"ACCELERATION {self.rocket_acceleration}\nresultant force {self.resultant_force}\ntotal mass {self.total_mass}\n"
         )
 
@@ -226,9 +225,9 @@ class Rocket:
         # if self.pos == 0:
         #     # Prevent negative velocities while on the launch pad
         #     self.rocket_velocity = 0
-        print(f"VEL BEFORE UPDATE {self.rocket_velocity}")
+        LOG.debug(f"VEL BEFORE UPDATE {self.rocket_velocity}")
         self.rocket_velocity = self.rocket_velocity + self.rocket_acceleration * dt
-        print(f"VEL VEL VEL {self.rocket_velocity}")
+        LOG.debug(f"VEL VEL VEL {self.rocket_velocity}")
 
     def move(self, dt):
         # Calculate delta position[displacement s] of the rocket per dt
@@ -244,7 +243,7 @@ class Rocket:
             dt**2
         )
 
-        print(f"delta pos x is {delta_pos_x}")
+        # LOG.debug(f"delta pos x is {delta_pos_x}")
 
         delta_pos_y = self.rocket_velocity * math.sin(
             self.theta * math.pi / 180
@@ -254,15 +253,15 @@ class Rocket:
             dt**2
         )
 
-        print(f"delta pos y is {delta_pos_y}")
+        # LOG.debug(f"delta pos y is {delta_pos_y}")
 
         delta_pos = np.array([delta_pos_x, delta_pos_y])
-        print(f"delta_pos is {delta_pos}")
+        # LOG.debug(f"delta_pos is {delta_pos}")
 
         self.pos = self.pos + delta_pos
-        print(f"Acceleration: {self.rocket_acceleration}")
-        print(f"Velocity: {self.rocket_velocity}\n")
-        print(f"pos: {self.pos}\n")
+        # LOG.debug(f"Acceleration: {self.rocket_acceleration}")
+        # LOG.debug(f"Velocity: {self.rocket_velocity}\n")
+        # LOG.debug(f"pos: {self.pos}\n")
         delta_pos = 0
 
     def update(self, dt):

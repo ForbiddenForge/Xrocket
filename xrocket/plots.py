@@ -1,13 +1,5 @@
 import csv
 
-import matplotlib
-import mplcyberpunk
-from matplotlib import pyplot as plt
-from mpl_toolkits import mplot3d
-
-# matplotlib.use("agg")
-plt.style.use("cyberpunk")
-
 
 def create_rocket_dict(rocket_parameters):
     # Create dictionary and associated keys for use with HUD GUI within pygame
@@ -72,6 +64,12 @@ def csv_output(rocket_parameters):
 
 
 def altitude_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
     plt.plot(rocket_parameters["Time"],rocket_parameters["Current Total Mass"],label="Current Total Mass",)
@@ -92,6 +90,11 @@ def altitude_plot(rocket_parameters, show_plots, save_plots):
         
     
 def position_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     x_axis = rocket_parameters["Time"]
@@ -112,6 +115,12 @@ def position_plot(rocket_parameters, show_plots, save_plots):
         
 
 def velocity_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
@@ -132,6 +141,12 @@ def velocity_plot(rocket_parameters, show_plots, save_plots):
 
 
 def acceleration_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
@@ -152,6 +167,12 @@ def acceleration_plot(rocket_parameters, show_plots, save_plots):
 
 
 def force_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
@@ -175,6 +196,12 @@ def force_plot(rocket_parameters, show_plots, save_plots):
 
 
 def fuel_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
@@ -192,13 +219,19 @@ def fuel_plot(rocket_parameters, show_plots, save_plots):
     plt.grid(True)
     mplcyberpunk.make_lines_glow()
     plt.tight_layout()
-    if save_plots():
+    if save_plots:
         plt.savefig("Mass.png", dpi=900)
     if show_plots:
         plt.show()
 
 
 def drag_force_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
@@ -219,6 +252,12 @@ def drag_force_plot(rocket_parameters, show_plots, save_plots):
 
 
 def weight_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
@@ -239,6 +278,12 @@ def weight_plot(rocket_parameters, show_plots, save_plots):
 
 
 def gravity_plot(rocket_parameters, show_plots, save_plots):
+    import matplotlib
+    import mplcyberpunk
+    from matplotlib import pyplot as plt
+    from mpl_toolkits import mplot3d
+    plt.style.use("cyberpunk")
+
     # fmt: off
     fig = plt.figure()
 
