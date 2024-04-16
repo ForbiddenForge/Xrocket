@@ -1,6 +1,6 @@
-# xrocket
+# Xrocket
 
-**xrocket** is a light-weight rocket simulator designed to provide simulations of rocket dynamics. The simulator allows users to visualize rocket trajectories, save plots for analysis, and operate in a verbose mode for detailed logging.
+**Xrocket** is a light-weight rocket simulator designed to provide simulations of rocket dynamics. The simulator allows users to visualize rocket trajectories, save plots for analysis, and operate in a verbose mode for detailed logging.
 
 ## Features
 
@@ -30,7 +30,7 @@ cd Xrocket
 Install the project and its dependencies using pip:
 
 ```bash
-pip install
+pip install -r requirements.txt
 ```
 
 This command will install xrocket along with the required Python dependencies listed in requirements.txt.
@@ -48,14 +48,6 @@ python -m xrocket
 - `--save-plots`: Save the plots to a file for further analysis.
 - `--verbose`: Run the simulator in verbose mode to view detailed logs.
 - `--help`: Display help information about the command-line options.
-
-## Development
-
-If you wish to contribute to `xrocket` or customize it further, set up a development environment:
-
-```bash
-pip install -e
-```
 
 This command will install the package in editable mode, allowing you to make changes to the code and see them reflected immediately.
 
