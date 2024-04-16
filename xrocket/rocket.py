@@ -7,6 +7,7 @@ from xrocket.gravity import gravity_acceleration_calc
 
 LOG = logging.getLogger(__name__)
 
+
 class Rocket:
     def __init__(self, core_stage, srb_stage, interim_stage, earth_mass, earth_radius):
 
@@ -32,7 +33,7 @@ class Rocket:
         # Values used to calculate drag force
         self.drag_coefficient = 0
         self.mach_speed = 0
-        #TODO refactor later
+        # TODO refactor later
         self.earth_mass = earth_mass
         self.earth_radius = earth_radius
 
@@ -152,7 +153,9 @@ class Rocket:
         if self.current_stage == "Core SRB":
             self.reference_area = self.core_stage.reference_area
         elif self.current_stage == "Core":
-            self.reference_area = self.core_stage.reference_area - self.srb_stage.reference_area
+            self.reference_area = (
+                self.core_stage.reference_area - self.srb_stage.reference_area
+            )
         elif self.current_stage == "Interim":
             self.reference_area = self.interim_stage.reference_area
 
@@ -219,7 +222,7 @@ class Rocket:
         # Use kinematics equation to update velocity
         # Second Law assumes constant "a" but with sufficiently small "dt" we can still use it
         # for a "good enough" approximation akin to Euler methods of slope approximation
-        #TODO
+        # TODO
         # Consider upgrading to the Rocket Equation's methodology at some point
         # and/or Runge Kutta Fourth Order [RK4]
         # if self.pos == 0:
@@ -277,6 +280,3 @@ class Rocket:
         self.calc_drag_force(dt)
         self.calc_acc_vel(dt)
         self.move(dt)
-
-
-
