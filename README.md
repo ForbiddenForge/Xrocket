@@ -5,7 +5,7 @@
 ## Features
 
 - Simulation of rocket dynamics with time-step control.
-- Options to show plots of the simulation in real-time.
+- Options to show plots after the simulation has ended.
 - Ability to save the output data and plots for further analysis.
 - Verbose mode for detailed debug information.
 
