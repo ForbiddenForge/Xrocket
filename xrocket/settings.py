@@ -3,7 +3,7 @@ EARTH_MASS = 5.9722e24  # kg
 EARTH_RADIUS = 6.371e6  # m
 
 
-''' ----------------------------------------------------------------
+""" ----------------------------------------------------------------
  --------------- STAGE PARAMETERS BELOW -------------------------
  ----------------------------------------------------------------
  Parameters for Space Launch System Core Stage (Block 1, 1B & 2)
@@ -48,7 +48,7 @@ EARTH_RADIUS = 6.371e6  # m
  Solid Rocket Boosters : 10.81 m**2
  Interim Cryogenic Propulsion Stage : 20.43 m**2
  Total Rocket Area Block 1 : 77.04 m**2
- ------------------------'''
+ ------------------------"""
 
 
 CORE_STAGE = {

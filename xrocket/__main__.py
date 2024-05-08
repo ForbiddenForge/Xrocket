@@ -8,7 +8,21 @@ from xrocket.plots import (
     csv_output,
     update_rocket_dict,
 )
+from xrocket.plots import (
+    create_plots,
+    create_rocket_dict,
+    csv_output,
+    update_rocket_dict,
+)
 from xrocket.rocket import Rocket
+from xrocket.settings import (
+    CORE_STAGE,
+    EARTH_MASS,
+    EARTH_RADIUS,
+    EXPLORATION_UPPER_STAGE,
+    INTERIM_CRYOGENIC_STAGE,
+    SOLID_ROCKET_BOOSTERS,
+)
 from xrocket.settings import (
     CORE_STAGE,
     EARTH_MASS,
@@ -26,18 +40,27 @@ def log_setup(log_level):
     logger = logging.getLogger()
     logger.setLevel(log_level)
 
+
     ch = logging.StreamHandler()
     ch.setLevel(log_level)
 
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
+
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     ch.setFormatter(formatter)
+
 
     logger.addHandler(ch)
 
 
 @click.command()
+@click.option("--show-plots", is_flag=True)
+@click.option("--save-plots", is_flag=True)
+@click.option("--verbose", is_flag=True)
 @click.option("--show-plots", is_flag=True)
 @click.option("--save-plots", is_flag=True)
 @click.option("--verbose", is_flag=True)
@@ -51,6 +74,7 @@ def run_rocket(show_plots, save_plots, verbose):
 
     # set initial time, dt, gravity, and eventually air resistance and more complex gravity
     t = 0
+    dt = 0.1  # seconds
     dt = 0.01  # seconds
 
     core_stage = Stage(
@@ -115,8 +139,12 @@ def run_rocket(show_plots, save_plots, verbose):
     if show_plots or save_plots:
         csv_output(rocket_parameters)
 
+
     create_plots(rocket_parameters, show_plots, save_plots)
 
 
+
+if __name__ == "__main__":
 if __name__ == "__main__":
     run_rocket()
+
