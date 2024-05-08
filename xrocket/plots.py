@@ -21,16 +21,24 @@ def create_rocket_dict(rocket_parameters):
     rocket_parameters["Core Fuel Remaining"] = []
     rocket_parameters["SRB Fuel Remaining"] = []
     rocket_parameters["Interim Fuel Remaining"] = []
+    rocket_parameters["Exploration Fuel Remaining"] = []
 
 
 def update_rocket_dict(
-    rocket_parameters, t, rocket, core_stage, srb_stage, interim_stage
+    rocket_parameters,
+    t,
+    rocket,
+    core_stage,
+    srb_stage,
+    interim_stage,
+    exploration_stage,
 ):
     rocket_parameters["Time"].append(t)
     rocket_parameters["Total Fuel Remaining"].append(rocket.total_propellant_mass)
     rocket_parameters["Core Fuel Remaining"].append(core_stage.prop_mass)
     rocket_parameters["SRB Fuel Remaining"].append(srb_stage.prop_mass)
     rocket_parameters["Interim Fuel Remaining"].append(interim_stage.prop_mass)
+    rocket_parameters["Exploration Fuel Remaining"].append(exploration_stage.prop_mass)
     rocket_parameters["Current Total Mass"].append(rocket.total_mass)
     rocket_parameters["Altitude"].append(rocket.pos[1])
     rocket_parameters["X Position"].append(rocket.pos[0])
@@ -68,6 +76,7 @@ def altitude_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -87,38 +96,40 @@ def altitude_plot(rocket_parameters, show_plots, save_plots):
         plt.savefig("Altitude.png", dpi=900)
     if show_plots:
         plt.show()
-        
-    
+
+
 def position_plot(rocket_parameters, show_plots, save_plots):
     import matplotlib
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
     fig = plt.figure()
-    ax = plt.axes(projection='3d')
+    ax = plt.axes(projection="3d")
     x_axis = rocket_parameters["Time"]
     y_axis = rocket_parameters["X Position"]
     z_axis = rocket_parameters["Altitude"]
-    ax.set_xlabel('Time')
-    ax.set_ylabel('X Position')
-    ax.set_zlabel('Altitude')
+    ax.set_xlabel("Time")
+    ax.set_ylabel("X Position")
+    ax.set_zlabel("Altitude")
     plt.xscale("linear")
     plt.yscale("linear")
     plt.ticklabel_format(useOffset=False, style="plain")
-    ax.plot3D(x_axis,y_axis, z_axis)
+    ax.plot3D(x_axis, y_axis, z_axis)
     mplcyberpunk.make_lines_glow()
     if show_plots:
         plt.show()
     if save_plots:
-        plt.savefig('Position.png', dpi=900)
-        
+        plt.savefig("Position.png", dpi=900)
+
 
 def velocity_plot(rocket_parameters, show_plots, save_plots):
     import matplotlib
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -145,6 +156,7 @@ def acceleration_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -171,6 +183,7 @@ def force_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -200,6 +213,7 @@ def fuel_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -230,6 +244,7 @@ def drag_force_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -256,6 +271,7 @@ def weight_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -282,6 +298,7 @@ def gravity_plot(rocket_parameters, show_plots, save_plots):
     import mplcyberpunk
     from matplotlib import pyplot as plt
     from mpl_toolkits import mplot3d
+
     plt.style.use("cyberpunk")
 
     # fmt: off
@@ -301,12 +318,12 @@ def gravity_plot(rocket_parameters, show_plots, save_plots):
         plt.savefig("Gravity.png", dpi=900)
     if show_plots:
         plt.show()
-        
-        
+
+
 def create_plots(rocket_parameters, show_plots, save_plots):
     if not show_plots and not save_plots:
         return
-    
+
     altitude_plot(rocket_parameters, show_plots, save_plots)
     velocity_plot(rocket_parameters, show_plots, save_plots)
     acceleration_plot(rocket_parameters, show_plots, save_plots)

@@ -43,7 +43,7 @@ EARTH_RADIUS = 6.371e6  # m
  Interim Cryogenic Propulsion Stage : -25.77 kg/s
  Exploration Stage : -45 * 4 = -180 kg/s
  ------------------------
- Referance Area of each component
+ Reference Area of each component
  Core Stage : 55.42 m**2
  Solid Rocket Boosters : 10.81 m**2
  Interim Cryogenic Propulsion Stage : 20.43 m**2

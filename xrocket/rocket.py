@@ -7,18 +7,28 @@ from xrocket.gravity import gravity_acceleration_calc
 
 LOG = logging.getLogger(__name__)
 
+
 class Rocket:
-    def __init__(self, core_stage, srb_stage, interim_stage, earth_mass, earth_radius):
+    def __init__(
+        self,
+        core_stage,
+        srb_stage,
+        interim_stage,
+        exploration_stage,
+        earth_mass,
+        earth_radius,
+    ):
 
         self.current_stage = "Core SRB"
         self.reference_area = 0
         self.air_density = 1.225  # kg / m**3 [rho]
 
         # List of Stage instances
-        self.stage_objects = [core_stage, srb_stage, interim_stage]
+        self.stage_objects = [core_stage, srb_stage, interim_stage, exploration_stage]
         self.core_stage = core_stage
         self.srb_stage = srb_stage
         self.interim_stage = interim_stage
+        self.exploration_stage = exploration_stage
 
         # Forces
         self.drag_force = 0
@@ -32,7 +42,7 @@ class Rocket:
         # Values used to calculate drag force
         self.drag_coefficient = 0
         self.mach_speed = 0
-        #TODO refactor later
+        # TODO refactor later
         self.earth_mass = earth_mass
         self.earth_radius = earth_radius
 
@@ -91,7 +101,13 @@ class Rocket:
             self.srb_stage.attached = False
             self.interim_stage.firing = True
             self.current_stage = "Interim"
-            self.theta = 90
+            self.theta = 110
+        elif self.interim_stage.prop_mass <= 0:
+            self.interim_stage.firing = False
+            self.interim_stage.attached = False
+            self.exploration_stage.firing = True
+            self.current_stage = "Exploration"
+            self.theta = 150
 
     def update_mass(self, dt):
         stage_dry_masses = [stage.dry_mass for stage in self.stage_objects]
@@ -99,7 +115,7 @@ class Rocket:
         stage_total_masses = [stage.total_mass for stage in self.stage_objects]
 
         LOG.debug(
-            f"Core Stage Dry Mass: {stage_dry_masses[0]}\nCore Stage Prop Mass: {stage_prop_masses[0]}\nCore Stage Total Mass: {stage_total_masses[0]}\nSRB Stage Dry Mass: {stage_dry_masses[1]}\nSRB Stage Prop Mass: {stage_prop_masses[1]}\nSRB Stage Total Mass: {stage_total_masses[1]}\nInterim Stage Dry Mass: {stage_dry_masses[2]}\nInterim Stage Prop Mass: {stage_prop_masses[2]}\nInterim Stage Total Mass: {stage_total_masses[2]}\n"
+            f"Core Stage Dry Mass: {stage_dry_masses[0]}\nCore Stage Prop Mass: {stage_prop_masses[0]}\nCore Stage Total Mass: {stage_total_masses[0]}\nSRB Stage Dry Mass: {stage_dry_masses[1]}\nSRB Stage Prop Mass: {stage_prop_masses[1]}\nSRB Stage Total Mass: {stage_total_masses[1]}\nInterim Stage Dry Mass: {stage_dry_masses[2]}\nInterim Stage Prop Mass: {stage_prop_masses[2]}\nInterim Stage Total Mass: {stage_total_masses[2]}\nExploration Stage Dry Mass: {stage_dry_masses[3]}\nExploration Stage Prop Mass: {stage_prop_masses[3]}\nExploration Stage Total Mass: {stage_total_masses[3]}\n"
         )
 
     def calc_air_density(self):
@@ -152,9 +168,13 @@ class Rocket:
         if self.current_stage == "Core SRB":
             self.reference_area = self.core_stage.reference_area
         elif self.current_stage == "Core":
-            self.reference_area = self.core_stage.reference_area - self.srb_stage.reference_area
+            self.reference_area = (
+                self.core_stage.reference_area - self.srb_stage.reference_area
+            )
         elif self.current_stage == "Interim":
             self.reference_area = self.interim_stage.reference_area
+        elif self.current_stage == "Exploration":
+            self.reference_area = self.exploration_stage.reference_area
 
     def calc_drag_force(self, dt):
         # update mach speed based from current rocket velocity
@@ -219,7 +239,7 @@ class Rocket:
         # Use kinematics equation to update velocity
         # Second Law assumes constant "a" but with sufficiently small "dt" we can still use it
         # for a "good enough" approximation akin to Euler methods of slope approximation
-        #TODO
+        # TODO
         # Consider upgrading to the Rocket Equation's methodology at some point
         # and/or Runge Kutta Fourth Order [RK4]
         # if self.pos == 0:
@@ -277,6 +297,3 @@ class Rocket:
         self.calc_drag_force(dt)
         self.calc_acc_vel(dt)
         self.move(dt)
-
-
-

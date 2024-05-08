@@ -2,12 +2,21 @@ import logging
 
 import click
 
-from xrocket.plots import (create_plots, create_rocket_dict, csv_output,
-                           update_rocket_dict)
+from xrocket.plots import (
+    create_plots,
+    create_rocket_dict,
+    csv_output,
+    update_rocket_dict,
+)
 from xrocket.rocket import Rocket
-from xrocket.settings import (CORE_STAGE, EARTH_MASS, EARTH_RADIUS,
-                              EXPLORATION_UPPER_STAGE, INTERIM_CRYOGENIC_STAGE,
-                              SOLID_ROCKET_BOOSTERS)
+from xrocket.settings import (
+    CORE_STAGE,
+    EARTH_MASS,
+    EARTH_RADIUS,
+    EXPLORATION_UPPER_STAGE,
+    INTERIM_CRYOGENIC_STAGE,
+    SOLID_ROCKET_BOOSTERS,
+)
 from xrocket.stage import Stage
 
 LOG = logging.getLogger(__name__)
@@ -16,24 +25,22 @@ LOG = logging.getLogger(__name__)
 def log_setup(log_level):
     logger = logging.getLogger()
     logger.setLevel(log_level)
-    
+
     ch = logging.StreamHandler()
     ch.setLevel(log_level)
-    
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     ch.setFormatter(formatter)
-    
+
     logger.addHandler(ch)
-    
-    
-    
-    
 
 
 @click.command()
-@click.option('--show-plots', is_flag=True)
-@click.option('--save-plots', is_flag=True) 
-@click.option('--verbose', is_flag=True)         
+@click.option("--show-plots", is_flag=True)
+@click.option("--save-plots", is_flag=True)
+@click.option("--verbose", is_flag=True)
 def run_rocket(show_plots, save_plots, verbose):
     if verbose:
         log_setup(logging.DEBUG)
@@ -44,7 +51,7 @@ def run_rocket(show_plots, save_plots, verbose):
 
     # set initial time, dt, gravity, and eventually air resistance and more complex gravity
     t = 0
-    dt = 0.1  # seconds    
+    dt = 0.01  # seconds
 
     core_stage = Stage(
         dry_mass=CORE_STAGE["Dry Mass"],
@@ -75,35 +82,41 @@ def run_rocket(show_plots, save_plots, verbose):
         ref_area=EXPLORATION_UPPER_STAGE["Reference Area"],
     )
 
-    rocket = Rocket(core_stage=core_stage, srb_stage=srb_stage, interim_stage=interim_stage, earth_mass=EARTH_MASS, earth_radius=EARTH_RADIUS )
+    rocket = Rocket(
+        core_stage=core_stage,
+        srb_stage=srb_stage,
+        interim_stage=interim_stage,
+        exploration_stage=exploration_stage,
+        earth_mass=EARTH_MASS,
+        earth_radius=EARTH_RADIUS,
+    )
 
     # Create dictionary and associated keys for use with HUD GUI within pygame
     rocket_parameters = {}
     create_rocket_dict(rocket_parameters)
-    
-
 
     # Loop over rocket.update and its related methods while the rocket still has fuel
-    while t < 1000:
-        t += 0.1
+    while t < 3000:
+        t += 0.01
         # fmt: off
         LOG.debug(f"Time is {t} seconds")
         rocket.update(dt)
         if show_plots or save_plots:
             update_rocket_dict(
-                rocket_parameters=rocket_parameters, 
-                t=t, 
-                rocket=rocket, 
-                core_stage=core_stage, 
-                srb_stage=srb_stage, 
-                interim_stage=interim_stage
-            )
-        
+                rocket_parameters=rocket_parameters,
+                t=t,
+                rocket=rocket,
+                core_stage=core_stage,
+                srb_stage=srb_stage,
+                interim_stage=interim_stage,
+                exploration_stage=exploration_stage
+                )
+
     if show_plots or save_plots:
         csv_output(rocket_parameters)
-        
-    create_plots(rocket_parameters, show_plots, save_plots)
-    
 
-if __name__ == '__main__':
+    create_plots(rocket_parameters, show_plots, save_plots)
+
+
+if __name__ == "__main__":
     run_rocket()
